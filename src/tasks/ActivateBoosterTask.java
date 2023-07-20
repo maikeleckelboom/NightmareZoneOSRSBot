@@ -28,4 +28,8 @@ public class ActivateBoostersTask extends TaskNode {
     private GameObject getClosestBooster() {
         return GameObjects.closest(gameObject -> gameObject != null && gameObject.hasAction("Activate") && !gameObject.getName().contains("Ultimate force"));
     }
+
+    public String toString() {
+        return "Activating booster" + getClosestBooster().getName();
+    }
 }

@@ -17,9 +17,7 @@ public class DrinkPrayerPotionTask extends TaskNode {
 
     @Override
     public int execute() {
-        Item prayerPotion = Inventory.get(
-                item -> item != null && item.getName().contains(PRAYER_POTION_KEYWORD)
-        );
+        Item prayerPotion = Inventory.get(item -> item != null && item.getName().contains(PRAYER_POTION_KEYWORD));
 
         if (prayerPotion != null) {
             prayerPotion.interact("Drink");
