@@ -5,7 +5,7 @@ import org.dreambot.api.methods.skills.Skill;
 import org.dreambot.api.script.TaskNode;
 import org.dreambot.api.wrappers.items.Item;
 
-public class DrinkPrayerPotionTask extends TaskNode {
+public class RestorePrayerTask extends TaskNode {
     private static final String PRAYER_POTION_KEYWORD = "Prayer potion";
 
 
@@ -24,7 +24,7 @@ public class DrinkPrayerPotionTask extends TaskNode {
             return 100;
         }
 
-        return 0;
+        return 1000;
     }
 
 
@@ -34,5 +34,9 @@ public class DrinkPrayerPotionTask extends TaskNode {
 
     private Item getPrayerPotion() {
         return Inventory.get(item -> item != null && item.getName().contains(PRAYER_POTION_KEYWORD));
+    }
+
+    public String toString() {
+        return "Restoring prayer";
     }
 }

@@ -79,44 +79,45 @@ public class NightmareZone extends TaskScript {
             case SETTING_UP -> {
             }
             case READY -> {
-                addNodes(new DrinkOverloadPotionTask());
+                addNodes(new ConsumeOverloadTask());
                 addNodes(new ActivatePrayersTask());
                 addNodes(new FightTask());
-                addNodes(new DrinkPrayerPotionTask());
-                addNodes(new ActivateBoostersTask());
+                addNodes(new RestorePrayerTask());
+                addNodes(new ActivateBoosterTask());
             }
         }
     }
 
 
-    protected String formatNumeric(long number) {
+    private String formatNumeric(long number) {
         return String.format("%,d", number);
     }
 
-    protected String formatTime(long time) {
+    private String formatTime(long time) {
         return TimeFormatter.formatTime(time);
     }
 
     @Override
     public void onPaint(Graphics2D g) {
-        g.drawString(formatTime(System.currentTimeMillis() - SkillTracker.getStartTime(Skill.HITPOINTS)), 10, 40);
+        g.drawString(formatTime(System.currentTimeMillis() - SkillTracker.getStartTime(Skill.HITPOINTS)), 10, 140);
 
         g.drawString("Strength level: " + Skills.getRealLevel(Skill.STRENGTH), 10, 65);
         g.drawString("Strength XP gained: " + formatNumeric(SkillTracker.getGainedExperience(Skill.STRENGTH)), 10, 80);
         g.drawString("Strength XP/hour: " + formatNumeric(SkillTracker.getGainedExperiencePerHour(Skill.STRENGTH)), 10, 95);
         g.drawString("Strength TTL: " + formatTime(SkillTracker.getTimeToLevel(Skill.STRENGTH)), 10, 110);
 
-        g.drawString("Hitpoints level: " + Skills.getRealLevel(Skill.HITPOINTS), 175, 65);
-        g.drawString("Hitpoints XP gained: " + formatNumeric(SkillTracker.getGainedExperience(Skill.HITPOINTS)), 175, 80);
+        g.drawString("Hitpoints level: " + Skills.getRealLevel(Skill.HITPOINTS), 75, 165);
+        g.drawString("Hitpoints XP gained: " + formatNumeric(SkillTracker.getGainedExperience(Skill.HITPOINTS)), 75, 80);
         g.drawString("Hitpoints XP/hour: " + formatNumeric(SkillTracker.getGainedExperiencePerHour(Skill.HITPOINTS)), 175, 95);
         g.drawString("Hitpoints TTL: " + formatTime(SkillTracker.getTimeToLevel(Skill.HITPOINTS)), 175, 110);
 
 
-        g.drawString(getLastTaskNode().getClass().getName().replace("src.tasks.", "").replace("Task", " Task"), 10, 135);
+        if (getLastTaskNode() == null) return;
+        g.drawString(getLastTaskNode().getClass().toString(), 10, 135);
 
         if (getLastTaskNode().getClass() == FightTask.class) {
-            g.setColor(new Color(196, 134, 28, 255));
-            g.drawString(getLastTaskNode().toString(), 10, 150);
+            g.setColor(new Color(248, 234, 180, 155));
+            g.drawString(getLastTaskNode().toString(), 10, 250);
         }
     }
 

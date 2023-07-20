@@ -10,7 +10,7 @@ import org.dreambot.api.utilities.Sleep;
 import org.dreambot.api.wrappers.items.Item;
 
 
-public class DrinkOverloadPotionTask extends TaskNode {
+public class ConsumeOverloadTask extends TaskNode {
 
     @Override
     public boolean accept() {
@@ -27,8 +27,8 @@ public class DrinkOverloadPotionTask extends TaskNode {
 
         if (overloadPotion != null) {
             overloadPotion.interact("Drink");
-            Sleep.sleepUntil(() -> Skills.getBoostedLevel(Skill.STRENGTH) > 0, 1000);
-            Sleep.sleepUntil(() -> Players.getLocal().getAnimation() == -1, 1000);
+            Sleep.sleepUntil(() -> Skills.getBoostedLevel(Skill.STRENGTH) > 0, 3000);
+            return 3000;
         }
 
         return Calculations.random(4000, 5000);
@@ -38,4 +38,7 @@ public class DrinkOverloadPotionTask extends TaskNode {
         return Inventory.get(item -> item != null && item.getName().contains("Overload"));
     }
 
+    public String toString() {
+        return "Consuming overload potion";
+    }
 }

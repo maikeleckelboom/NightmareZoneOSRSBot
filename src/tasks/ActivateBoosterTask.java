@@ -5,7 +5,7 @@ import org.dreambot.api.methods.interactive.GameObjects;
 import org.dreambot.api.script.TaskNode;
 import org.dreambot.api.wrappers.interactive.GameObject;
 
-public class ActivateBoostersTask extends TaskNode {
+public class ActivateBoosterTask extends TaskNode {
 
     @Override
     public boolean accept() {

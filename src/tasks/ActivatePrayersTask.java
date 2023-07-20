@@ -35,4 +35,8 @@ public class ActivatePrayersTask extends TaskNode {
         }
         return false;
     }
+
+    public String toString() {
+        return "Activating prayers";
+    }
 }

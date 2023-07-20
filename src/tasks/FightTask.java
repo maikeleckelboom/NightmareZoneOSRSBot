@@ -6,7 +6,6 @@ import org.dreambot.api.methods.container.impl.Inventory;
 import org.dreambot.api.methods.interactive.GameObjects;
 import org.dreambot.api.methods.interactive.NPCs;
 import org.dreambot.api.methods.interactive.Players;
-import org.dreambot.api.methods.map.Tile;
 import org.dreambot.api.methods.skills.Skill;
 import org.dreambot.api.script.TaskNode;
 import org.dreambot.api.utilities.Sleep;
@@ -17,12 +16,7 @@ import java.util.List;
 
 public class FightTask extends TaskNode {
 
-    Tile caveCenter = new Tile(14192, 1065, 3);
-
-    Tile lastBoosterTile = null;
-
-    String subState = "Waiting for enemies to spawn...";
-    String currentEnemy = "None";
+    String taskString = "Waiting for enemies to spawn...";
 
 
     @Override
@@ -30,9 +24,6 @@ public class FightTask extends TaskNode {
         GameObject booster = GameObjects.closest(gameObject -> gameObject != null
                 && gameObject.hasAction("Activate")
                 && !gameObject.getName().equalsIgnoreCase("Ultimate force"));
-
-        lastBoosterTile = (booster == null) ? null : booster.getTile();
-
         return Skill.PRAYER.getBoostedLevel() > Skill.PRAYER.getLevel() / 2 && Skill.STRENGTH.getBoostedLevel() > 0 && booster == null;
     }
 
@@ -42,26 +33,20 @@ public class FightTask extends TaskNode {
 
 
         if (enemy == null) {
-            currentEnemy = "None";
-            subState = "No enemies found";
-
+            taskString = "No enemies found";
             return Calculations.random(100, 500);
         }
 
-        currentEnemy = enemy.getName();
-
         if (enemy.interact("Attack")) {
-
-            subState = "Attacking enemy";
 
             Sleep.sleepUntil(this::isFighting, 2500);
 
-            subState = "In combat with " + enemy.getName();
+            taskString = "Attacking  " + enemy.getName();
 
             if (Combat.getSpecialPercentage() >= 25) {
                 if (Inventory.get("Dragon dagger(p++)").interact("Wield")) {
                     Sleep.sleepUntil(() -> Inventory.contains("Dragon scimitar"), 1000);
-                    subState = "Unleashing special attack on " + enemy.getName();
+                    taskString = "Unleashing special attack on " + enemy.getName();
                     while (Combat.getSpecialPercentage() >= 25) {
                         Combat.toggleSpecialAttack(true);
                         Sleep.sleepUntil(Combat::isSpecialActive, 1000);
@@ -73,11 +58,12 @@ public class FightTask extends TaskNode {
             if (Inventory.contains("Dragon scimitar")) {
                 if (Inventory.get("Dragon scimitar").interact("Wield")) {
                     Sleep.sleepUntil(() -> Inventory.contains("Dragon dagger(p++)"), 1000);
+                    taskString = "Attacking  " + enemy.getName();
                     enemy.interact("Attack");
                 }
             }
 
-//            Sleep.sleepUntil(() -> !isFighting(), 5000);
+            Sleep.sleepUntil(() -> !isFighting(), 4000);
         }
 
         return Calculations.random(500, 1000);
@@ -102,10 +88,10 @@ public class FightTask extends TaskNode {
     }
 
     private boolean isFighting() {
-        return Players.getLocal().isInCombat();
+        return Players.getLocal().isInCombat() || Players.getLocal().isHealthBarVisible() || Players.getLocal().isInteractedWith();
     }
 
     public String toString() {
-        return subState;
+        return taskString;
     }
 }
